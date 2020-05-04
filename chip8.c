@@ -146,7 +146,7 @@ void loop() {
 		X >>= 8;
 
 
-		printf("Processing Instruction %x, switch %x, X=%x, Y=%x, N=%x, NN=%x, NNN=%x\n", instruction, instruction>>12, X,Y,N,NN,NNN);
+		printf("Processing Instruction %x, opcode %x, X=%x, Y=%x, N=%x, NN=%x, NNN=%x\n", instruction, instruction>>12, X,Y,N,NN,NNN);
 
 		PC+=2;
 		switch(opcode) {
@@ -282,10 +282,11 @@ void loop() {
 						MEMORY[I+2] = V[X]%10;
 						break;
 					case 0x55:
-						for(;I<=X;I++) MEMORY[I]=V[I];
+						for(int i = 0;i<=X;i++,I++) MEMORY[I]=V[i];
 						break;
 					case 0x65:
-						for(;I<=X;I++) V[I] = MEMORY[I];
+						printf("Loading V[0] -> V[%d]\n", X);
+						for(int i=0;i<=X;i++,I++) V[i] = MEMORY[I];
 						break;
 				}
 				break;
@@ -298,7 +299,7 @@ void loop() {
 		}else SDL_PauseAudio(1);
 		SDL_BlitScaled(surface, NULL, windowSurface, NULL);
 		SDL_UpdateWindowSurface(window);
-		SDL_Delay(100);
+		SDL_Delay(16);
 	}
 }
 
