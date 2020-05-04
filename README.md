@@ -20,3 +20,4 @@ make
 ### TODO
  - Add better timing for delay and sound timers (Not even sure what the clock rate of the CHIP-8 was
  - Add key blocking op code, still trying to think of a good way to do it
+ - Write a standalone assembler for it
