@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <math.h>
-#include <curses.h>
 #include <SDL2/SDL.h>
 
 const int AMPLITUDE = 2800;
