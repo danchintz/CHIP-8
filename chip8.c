@@ -98,9 +98,10 @@ void draw(unsigned char X, unsigned char Y, unsigned char H) {
 void loop() {
 
 	SDL_Event event;
-	unsigned int opcode;
+	unsigned int instruction;
 	unsigned int X,Y;
 	unsigned int N, NN, NNN;
+	unsigned int opcode;
 
 	char blocking = 0;
 	char key = 0;
@@ -132,12 +133,12 @@ void loop() {
 			if(event.type == SDL_QUIT)exit(0);
 		}
 
-		opcode = MEMORY[PC]<<8|MEMORY[PC+1];
+		instruction = MEMORY[PC]<<8|MEMORY[PC+1];
 
-
-		X = opcode & 0x0F00;
-		Y = opcode & 0x00F0;
-		N = opcode & 0x000F;
+		opcode = instruction >> 12;
+		X = instruction & 0x0F00;
+		Y = instruction & 0x00F0;
+		N = instruction & 0x000F;
 		NN = Y|N;
 		NNN = X|NN;
 
@@ -145,15 +146,20 @@ void loop() {
 		X >>= 8;
 
 
-		/*printf("Processing Instruction %x, switch %x, X=%x, Y=%x, N=%x, NN=%x, NNN=%x\n", opcode, opcode>>12, X,Y,N,NN,NNN);*/
+		printf("Processing Instruction %x, switch %x, X=%x, Y=%x, N=%x, NN=%x, NNN=%x\n", instruction, instruction>>12, X,Y,N,NN,NNN);
 
 		PC+=2;
-		switch(opcode >> 12) {
+		switch(opcode) {
 			case 0x0:
 				switch(NN) {
+					case 0x00:
+						exit(69);
+						return;
 					case 0xE0:
 						for(int i =0;i<surface->w*surface->h;i++)
 							((unsigned int *)surface->pixels)[i]=0;
+						for(int i =0;i<windowSurface->w*windowSurface->h;i++)
+							((unsigned int *) windowSurface->pixels)[i]=0;
 						break;
 					case 0xEE:
 						PC = pop();
@@ -254,8 +260,8 @@ void loop() {
 						/*blocking = 1;*/
 						/*if(!key) PC -= 2;*/
 						/*else {*/
-							/*V[X] = key;*/
-							/*blocking = key = 0;*/
+						/*V[X] = key;*/
+						/*blocking = key = 0;*/
 						/*}*/
 						break;
 					case 0x15:
@@ -278,7 +284,7 @@ void loop() {
 					case 0x55:
 						for(;I<=X;I++) MEMORY[I]=V[I];
 						break;
-					case 0x64:
+					case 0x65:
 						for(;I<=X;I++) V[I] = MEMORY[I];
 						break;
 				}
@@ -292,6 +298,7 @@ void loop() {
 		}else SDL_PauseAudio(1);
 		SDL_BlitScaled(surface, NULL, windowSurface, NULL);
 		SDL_UpdateWindowSurface(window);
+		SDL_Delay(100);
 	}
 }
 
@@ -299,7 +306,7 @@ void loop() {
 int main(int argc, char **argv) {
 	if(argc != 2) {
 		fprintf(stderr, "usage %s <rom file>", argv[0]);
-		exit(69);
+		exit(1);
 	}
 
 	int fd = open(argv[1], O_RDONLY);

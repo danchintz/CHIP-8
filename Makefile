@@ -1,10 +1,10 @@
 all: chip8
 
-chip8: chip8.o
-	gcc -o chip8 chip8.o -lSDL2 -lm
+chip8: chip8.c
+	gcc -o chip8 chip8.c -lSDL2 -lm
 
-chip8.o: chip8.c
-	gcc -c chip8.c
+debug: clean
+	gcc -o chip8 -g chip8.c -lSDL2 -lm
 
 clean:
-	rm -f chip8.o chip8
+	rm -f chip8
