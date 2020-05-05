@@ -12,6 +12,9 @@ const int SCALE = 8;
 const int SCREEN_WIDTH = 64;
 const int SCREEN_HEIGHT = 32;
 
+/*
+   Font set is 80 bytes and starts at MEMORY[0]
+*/
 unsigned char MEMORY[4096] = {
 	0xF0,0x90,0x90,0x90,0xF0,
 	0x20,0x60,0x20,0x20,0x70,
